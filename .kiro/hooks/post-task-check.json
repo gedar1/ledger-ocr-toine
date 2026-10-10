@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Post-task checks",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "command",
+        "command": "npx tsc --noEmit && npm run lint"
+      }
+    }
+  ]
+}

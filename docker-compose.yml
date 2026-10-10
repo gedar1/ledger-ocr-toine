@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ledger_ocr
+    ports:
+      - "5449:5432"
+    volumes:
+      - ledger_ocr_db_data:/var/lib/postgresql/data
+
+volumes:
+  ledger_ocr_db_data:

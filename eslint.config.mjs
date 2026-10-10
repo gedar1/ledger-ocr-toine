@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // public/sw.js is Serwist's compiled/minified service worker output
+    // (swDest in next.config.ts's withSerwistInit call), regenerated on
+    // every build from src/app/sw.ts — not hand-written source. Lint the
+    // source, never the bundled output.
+    "public/sw.js",
   ]),
 ]);
 

@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Serwist (generated service worker, see next.config.ts/src/app/sw.ts)
+public/sw*
+public/swe-worker*

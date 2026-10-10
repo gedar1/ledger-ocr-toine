@@ -1,0 +1,11 @@
+
+> ledger-ocr@0.1.0 lint
+> eslint
+
+
+C:\Users\GermanDarioArbelaez\Documents\project-agent\ledger-ocr\src\app\admin\clients\[clientId]\expenses\page.tsx
+  49:12  warning  Unused eslint-disable directive (no problems were reported from '@next/next/no-html-link-for-pages')
+
+✖ 1 problem (0 errors, 1 warning)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

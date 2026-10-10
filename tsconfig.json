@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,6 +18,11 @@
         "name": "next"
       }
     ],
+    // Explicit because adding `types` disables TypeScript's automatic
+    // @types/* discovery — every @types package this project relies on
+    // (node/react/react-dom/bcryptjs) must be listed here too, alongside
+    // the Serwist typings this FEAT adds (window.serwist's ambient type).
+    "types": ["node", "react", "react-dom", "bcryptjs", "@serwist/next/typings"],
     "paths": {
       "@/*": ["./src/*"]
     }
@@ -30,5 +35,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "public/sw.js"]
 }

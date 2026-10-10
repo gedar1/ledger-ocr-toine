@@ -1,0 +1,12 @@
+{
+  "verdict": "CHANGES_REQUESTED",
+  "findings": [
+    "Contraste del modo oscuro: --ink y --on-dark se vuelven ambos claros, haciendo ilegibles button-dark, badges oscuros y navegación activa; definir pares de tokens compatibles y verificar contraste WCAG.",
+    "Estado activo de navegación: SectionHeader no marca la ruta actual y la clase activa no usa el naranja requerido; añadir aria-current y estado visual activo.",
+    "Error crudo del proveedor OCR: la API puede devolver ServiceUnavailableError.message y scan/page.tsx lo muestra como data.error; mapear a mensajes públicos traducidos.",
+    "Copy sin localización: hay cadenas nuevas hardcodeadas en español pese al selector es/nl/en; mover el copy a los tres archivos de mensajes.",
+    "Fallos de red sin estado recuperable: los fetch no capturan excepciones y pueden dejar controles bloqueados o confundir error con lista vacía; añadir feedback y reintento.",
+    "Matriz runtime no evidenciada: FEAT solo documenta lint/tsc/build manuales y revisión estática; ejecutar y registrar login, OCR, revisión, 404 y 375/768/escritorio."
+  ],
+  "reviewDoc": "C:\\Users\\GermanDarioArbelaez\\Documents\\project-agent\\ledger-ocr\\.agents\\tasks\\mistral-theme-ledger-ocr\\2025-01-01-000000-review.md"
+}

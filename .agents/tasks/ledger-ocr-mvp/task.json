@@ -1,0 +1,7 @@
+{
+  "task_id": "task-ledger-ocr-mvp",
+  "task_description": "Build the Ledger OCR MVP: multi-tenant Next.js 16 PWA for a Dutch accountant managing Latino ZZP clients. NextAuth v5 roles (ACCOUNTANT/CLIENT), client invitation/activation, categories, manual + OCR-assisted expense creation with GPT-4o Vision + Jev/TypeSafe classification (confidence-gated, no auto-approval), accountant review workflow, CSV export, next-intl (es/nl/en), Serwist PWA. Keep a working build (lint + tsc --noEmit + next build green) at every stage.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003", "FEAT-004", "FEAT-005"],
+  "blocked_reason": null
+}

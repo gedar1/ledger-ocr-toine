@@ -1,0 +1,7 @@
+{
+  "task_id": "mistral-theme-ledger-ocr",
+  "task_description": "Aplicar el tema visual Mistral al checkout ledger-ocr preservando los flujos de gastos, OCR/IA y contador/cliente.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ACCOUNTANT
+  CLIENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role
+  locale    String   @default("es")
+  createdAt DateTime @default(now())
+
+  // Present only when role = CLIENT
+  clientProfile ClientProfile?
+
+  // Present only when role = ACCOUNTANT: categories this accountant owns,
+  // and clients this accountant manages.
+  categories      Category[]
+  managedClients  ClientProfile[] @relation("AccountantClients")
+  reviewedExpenses Expense[]      @relation("ReviewedByAccountant")
+}
+
+enum ClientStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+}
+
+model ClientProfile {
+  id          String       @id @default(cuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName String
+  kvkNumber   String?
+  btwNumber   String?
+  status      ClientStatus @default(INVITED)
+
+  accountantId String
+  accountant   User   @relation("AccountantClients", fields: [accountantId], references: [id])
+
+  invitationTokens InvitationToken[]
+  expenses         Expense[]
+
+  createdAt DateTime @default(now())
+}
+
+model InvitationToken {
+  id              String        @id @default(cuid())
+  tokenHash       String        @unique
+  clientProfileId String
+  clientProfile   ClientProfile @relation(fields: [clientProfileId], references: [id], onDelete: Cascade)
+  expiresAt       DateTime
+  usedAt          DateTime?
+  createdAt       DateTime      @default(now())
+}
+
+model Category {
+  id                 String    @id @default(cuid())
+  name               String
+  icon               String    @default("tag")
+  color              String    @default("#6366f1")
+  defaultDeductible  Boolean   @default(true)
+  defaultBtwRate     Float     @default(21)
+
+  accountantId String
+  accountant   User   @relation(fields: [accountantId], references: [id])
+
+  expenses Expense[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([accountantId, name])
+}
+
+enum ExpenseStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  amount      Float
+  currency    String   @default("EUR")
+  description String
+  date        DateTime @default(now())
+  receipt     String?
+  ocrText     String?
+
+  clientId   String
+  client     ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category      @relation(fields: [categoryId], references: [id])
+
+  deductible               Boolean  @default(true)
+  btwRate                  Float    @default(21)
+  classificationConfidence Float?
+
+  status     ExpenseStatus @default(PENDING)
+  reviewNote String?
+  reviewedById String?
+  reviewedBy   User?       @relation("ReviewedByAccountant", fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?
+  locked       Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
