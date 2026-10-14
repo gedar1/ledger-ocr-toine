@@ -1,26 +1,49 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
-import { SectionHeader } from "@/components/section-header";
-import { SectionNavLink } from "@/components/section-nav-link";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import logo_ledger_2 from "@/assets/images/logo_ledger_2.png";
+import Image from "next/image";
 
 export default async function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-  const t = await getTranslations("AdminHome");
+}: Readonly<{
+  children: ReactNode;
+}>) {
+  const home = await getTranslations("AdminHome");
+  // const navigation = await getTranslations("AdminNavigation");
+  // console.log(navigation("navigationLabel"));
 
   return (
-    <div className="flex flex-1 flex-col">
-      <SectionHeader>
-        <SectionNavLink href="/admin" exact className="section-nav-brand">
-          {t("title")}
-        </SectionNavLink>
-        <SectionNavLink href="/admin/clients">{t("clients")}</SectionNavLink>
-        <SectionNavLink href="/admin/categories">
-          {t("categories")}
-        </SectionNavLink>
-      </SectionHeader>
-      <div className="flex flex-1 flex-col">{children}</div>
+    <div className="admin-shell">
+      <div className="admin-main">
+        <header className="site-header admin-header">
+          <div className="admin-header-inner">
+            <Image
+              width={90}
+              src={logo_ledger_2}
+              alt="logo"
+              className="object-cover"
+            />
+
+            {/* <p className="admin-header-context">{home("title")}</p> */}
+            <LocaleSwitcher />
+          </div>
+        </header>
+        <div className="admin-content">
+          <AdminSidebar
+            title={home("title")}
+            clients={home("clients")}
+            reviewQueue={home("reviewQueue")}
+            categories={home("categories")}
+            // navigationLabel={navigation("navigationLabel")}
+            // openMenu={navigation("openMenu")}
+            // closeMenu={navigation("closeMenu")}
+          />
+
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

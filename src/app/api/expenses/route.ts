@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       where: { id: clientId },
       select: { accountantId: true },
     });
-    if (!clientProfile || clientProfile.accountantId !== session.user.id) {
+    if (clientProfile?.accountantId !== session.user.id) {
       // An accountant must never see another accountant's clients' expenses.
       return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
@@ -60,8 +60,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (
-    !session?.user ||
-    session.user.role !== "CLIENT" ||
+    session?.user.role !== "CLIENT" ||
     session.user.clientStatus !== "ACTIVE" ||
     !session.user.clientProfileId
   ) {
@@ -69,7 +68,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => null);
-  const amount = typeof body?.amount === "number" ? body.amount : NaN;
+  const amount = typeof body?.amount === "number" ? body.amount : Number.NaN;
   const description =
     typeof body?.description === "string" ? body.description.trim() : "";
   const parsedDate =
@@ -105,7 +104,7 @@ export async function POST(req: NextRequest) {
   const category = await prisma.category.findUnique({
     where: { id: categoryId },
   });
-  if (!category || category.accountantId !== clientProfile.accountantId) {
+  if (category?.accountantId !== clientProfile.accountantId) {
     return NextResponse.json({ error: "Categoría inválida" }, { status: 400 });
   }
 

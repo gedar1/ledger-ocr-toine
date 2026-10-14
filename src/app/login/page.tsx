@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
     setLoading(true);
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex flex-1 items-center justify-center bg-surface px-5 py-12 sm:px-8">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-1/5">
         <div className="mb-5 flex justify-end">
           <LocaleSwitcher />
         </div>

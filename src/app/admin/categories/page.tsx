@@ -82,7 +82,9 @@ export default function AdminCategoriesPage() {
       setSubmitting(false);
     }
   }
-  async function handleDelete(id: string) {
+  async function handleDelete(id: string, categoryName: string) {
+    if (!window.confirm(t("deleteConfirm", { name: categoryName }))) return;
+
     try {
       const res = await fetch(`/api/categories/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("category-delete-failed");
@@ -95,80 +97,108 @@ export default function AdminCategoriesPage() {
   return (
     <main className="flex-1 bg-surface">
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8 lg:py-16">
-        <p className="eyebrow">{t("eyebrow")}</p>
-        <h1 className="display-font mt-3 text-4xl text-ink sm:text-5xl">
-          {t("title")}
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate">
-          {t("intro")}
-        </p>
-        <form onSubmit={handleSubmit} className="card-cream mt-8 p-6 sm:p-8">
-          <span className="badge-dark">01</span>
-          <h2 className="mt-4 text-2xl font-medium text-ink">
-            {t("newCategory")}
-          </h2>
-          <div className="mt-6 grid gap-5 sm:grid-cols-[1fr_180px]">
-            <div>
-              <label htmlFor="name" className="field-label">
-                {t("nameLabel")}
-              </label>
-              <input
-                id="name"
-                required
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                className="text-input mt-2 w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="defaultBtwRate" className="field-label">
-                {t("btwRateLabel")}
-              </label>
-              <select
-                id="defaultBtwRate"
-                value={defaultBtwRate}
-                onChange={(event) =>
-                  setDefaultBtwRate(Number(event.target.value))
-                }
-                className="text-input mt-2 w-full"
-              >
-                <option value={0}>0%</option>
-                <option value={9}>9%</option>
-                <option value={21}>21%</option>
-              </select>
-            </div>
-          </div>
-          <label className="mt-5 flex min-h-11 items-center gap-3 text-sm font-medium text-ink">
-            <input
-              type="checkbox"
-              checked={defaultDeductible}
-              onChange={(event) => setDefaultDeductible(event.target.checked)}
-              className="checkbox-control"
-            />
-            {t("deductibleLabel")}
-          </label>
-          {error && (
-            <p role="alert" aria-live="polite" className="form-error mt-5">
-              {error}
-            </p>
-          )}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="button-dark mt-6 disabled:cursor-not-allowed disabled:opacity-50"
+        <header aria-labelledby="categories-heading">
+          <p className="eyebrow">{t("eyebrow")}</p>
+        </header>
+
+        <section
+          className="card-base mt-8 flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
+          aria-labelledby="category-summary-heading"
+        >
+          <h2
+            id="category-summary-heading"
+            className="text-lg font-medium text-ink"
           >
-            {submitting ? t("submitting") : t("submit")}
-          </button>
-        </form>
-        <section className="mt-12" aria-labelledby="category-list-heading">
-          <div className="flex items-end justify-between border-b border-hairline-soft pb-4">
+            {t("summaryTitle")}
+          </h2>
+          <p className="text-sm text-slate">
+            {t("configuredCount", { count: categories.length })}
+          </p>
+        </section>
+
+        <section className="mt-5" aria-labelledby="new-category-heading">
+          <form onSubmit={handleSubmit} className="card-cream p-6 sm:p-8">
+            <span className="badge-dark">01</span>
             <h2
-              id="category-list-heading"
-              className="text-2xl font-medium text-ink"
+              id="new-category-heading"
+              className="mt-4 text-2xl font-medium text-ink"
             >
-              {t("activeCategories")}
+              {t("newCategory")}
             </h2>
-            <span className="text-sm text-steel">{categories.length}</span>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate">
+              {t("newCategoryIntro")}
+            </p>
+            <div className="mt-6 grid gap-5 sm:grid-cols-[1fr_180px]">
+              <div>
+                <label htmlFor="name" className="field-label">
+                  {t("nameLabel")}
+                </label>
+                <input
+                  id="name"
+                  required
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className="text-input mt-2 w-full"
+                />
+              </div>
+              <div>
+                <label htmlFor="defaultBtwRate" className="field-label">
+                  {t("btwRateLabel")}
+                </label>
+                <select
+                  id="defaultBtwRate"
+                  value={defaultBtwRate}
+                  onChange={(event) =>
+                    setDefaultBtwRate(Number(event.target.value))
+                  }
+                  className="text-input mt-2 w-full"
+                >
+                  <option value={0}>0%</option>
+                  <option value={9}>9%</option>
+                  <option value={21}>21%</option>
+                </select>
+              </div>
+            </div>
+            <label className="mt-5 flex min-h-11 items-center gap-3 text-sm font-medium text-ink">
+              <input
+                type="checkbox"
+                checked={defaultDeductible}
+                onChange={(event) => setDefaultDeductible(event.target.checked)}
+                className="checkbox-control"
+              />
+              {t("deductibleLabel")}
+            </label>
+            {error && (
+              <p role="alert" aria-live="polite" className="form-error mt-5">
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={submitting}
+              className="button-dark mt-6 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {submitting ? t("submitting") : t("submit")}
+            </button>
+          </form>
+        </section>
+
+        <section className="mt-12" aria-labelledby="category-list-heading">
+          <div className="flex flex-col gap-2 border-b border-hairline-soft pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2
+                id="category-list-heading"
+                className="text-2xl font-medium text-ink"
+              >
+                {t("activeCategories")}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate">
+                {t("categoryListIntro")}
+              </p>
+            </div>
+            <span className="text-sm text-steel">
+              {t("configuredCount", { count: categories.length })}
+            </span>
           </div>
           {loading ? (
             <div className="empty-state mt-5" aria-busy="true">
@@ -193,30 +223,43 @@ export default function AdminCategoriesPage() {
               <p className="text-sm text-slate">{t("empty")}</p>
             </div>
           ) : (
-            <ul className="mt-5 grid gap-3" aria-label={t("title")}>
+            <ul
+              className="mt-5 grid gap-4 md:grid-cols-2"
+              aria-label={t("activeCategories")}
+            >
               {categories.map((category) => (
                 <li
                   key={category.id}
-                  className="card-base flex items-center justify-between gap-4 p-5"
+                  className="card-base flex flex-col gap-5 p-5"
                 >
-                  <div>
+                  <div className="flex items-start justify-between gap-4">
                     <p className="text-base font-medium text-ink">
                       {category.name}
                     </p>
-                    <p className="mt-1 text-sm text-slate">
-                      BTW {category.defaultBtwRate}% ·{" "}
-                      {category.defaultDeductible
-                        ? t("deductible")
-                        : t("notDeductible")}
-                    </p>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(category.id, category.name)}
+                      className="button-secondary min-h-10 shrink-0 px-3 py-2 text-xs text-primary-deep"
+                    >
+                      {t("delete")}
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(category.id)}
-                    className="button-secondary min-h-10 px-3 py-2 text-xs text-primary-deep"
-                  >
-                    {t("delete")}
-                  </button>
+                  <dl className="grid gap-3 border-t border-hairline-soft pt-4 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="field-label">{t("btwRateLabel")}</dt>
+                      <dd className="mt-1 text-slate">
+                        {t("btwRateValue", { rate: category.defaultBtwRate })}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="field-label">{t("deductibleLabel")}</dt>
+                      <dd className="mt-1 text-slate">
+                        {category.defaultDeductible
+                          ? t("deductible")
+                          : t("notDeductible")}
+                      </dd>
+                    </div>
+                  </dl>
                 </li>
               ))}
             </ul>

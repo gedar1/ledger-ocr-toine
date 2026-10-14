@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 type SectionNavLinkProps = {
   href: string;
   children: ReactNode;
   className?: string;
   exact?: boolean;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 };
 
 export function SectionNavLink({
@@ -16,7 +17,8 @@ export function SectionNavLink({
   children,
   className = "",
   exact = false,
-}: SectionNavLinkProps) {
+  onClick,
+}: Readonly<SectionNavLinkProps>) {
   const pathname = usePathname();
   const active = exact
     ? pathname === href
@@ -27,6 +29,7 @@ export function SectionNavLink({
       href={href}
       aria-current={active ? "page" : undefined}
       className={`section-nav-link ${active ? "section-nav-link-active" : ""} ${className}`.trim()}
+      onClick={onClick}
     >
       {children}
     </Link>
